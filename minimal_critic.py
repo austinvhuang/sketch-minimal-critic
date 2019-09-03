@@ -6,7 +6,6 @@ Minimal example of a basic classifier with a tiny critic and multiplexed output
 
 import torch
 from torch.nn.functional import binary_cross_entropy
-import pandas as pd
 
 
 def mplex(out, mplex):
@@ -18,7 +17,8 @@ def mplex(out, mplex):
 class SimpleMultiplex(torch.nn.Module):
     def __init__(self, data_dim):
         super().__init__()
-        # Core network
+        # Basic classifier network
+        # (hidden layers are superfluous for this simple data)
         self.h1 = torch.nn.Linear(data_dim, 10)
         self.h2 = torch.nn.Linear(10, 5)
         self.out = torch.nn.Linear(5, 1)
@@ -26,7 +26,7 @@ class SimpleMultiplex(torch.nn.Module):
         self.mplex = torch.nn.Linear(5, 1)
 
     def forward(self, x):
-        """basic ff network (w/o critic network)"""
+        """basic feedforward network (w/o critic network)"""
         h2 = torch.relu(self.h2(torch.relu(self.h1(x))))
         return torch.sigmoid(self.out(h2))
 
@@ -131,7 +131,7 @@ def main():
     optimizer = torch.optim.Adam(model.parameters())
     for epoch in range(50):
         loss = train(epoch, model, optimizer, data_loader, device, data_dim)
-    print("loss: " + str(loss))
+    print("Loss: %s" % loss)
     report(model, data_dim)
 
     # train critic - all observations wrong
@@ -144,7 +144,7 @@ def main():
     optimizer = torch.optim.Adam(model.parameters())
     for epoch in range(50):
         loss = train_critic(epoch, model, optimizer, data_loader_crit, device, data_dim)
-    print("loss: " + str(loss))
+    print("Loss: %s" % loss)
     report(model, data_dim)
 
     # train critic - all observations correct
@@ -155,7 +155,7 @@ def main():
     optimizer = torch.optim.Adam(model.parameters())
     for epoch in range(50):
         loss = train_critic(epoch, model, optimizer, data_loader_crit, device, data_dim)
-    print("loss: " + str(loss))
+    print("Loss: %s" % loss)
     report(model, data_dim)
 
     print("\nDone")
