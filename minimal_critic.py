@@ -129,7 +129,7 @@ def main():
     print("\nModel Training ----\n")
     _, _, data_loader = gen_data(3000, data_dim, separation)
     optimizer = torch.optim.Adam(model.parameters())
-    for epoch in range(50):
+    for epoch in range(30):
         loss = train(epoch, model, optimizer, data_loader, device, data_dim)
     print("Loss: %s" % loss)
     report(model, data_dim)
@@ -142,7 +142,7 @@ def main():
     # note fresh optimizer prevents .step() from perturbing state of core network
     # in spite of .zero_grad() being called prior to .step()
     optimizer = torch.optim.Adam(model.parameters())
-    for epoch in range(50):
+    for epoch in range(30):
         loss = train_critic(epoch, model, optimizer, data_loader_crit, device, data_dim)
     print("Loss: %s" % loss)
     report(model, data_dim)
@@ -153,7 +153,7 @@ def main():
     )
     print("\nModel Criticism (all correct) ----\n")
     optimizer = torch.optim.Adam(model.parameters())
-    for epoch in range(50):
+    for epoch in range(30):
         loss = train_critic(epoch, model, optimizer, data_loader_crit, device, data_dim)
     print("Loss: %s" % loss)
     report(model, data_dim)
